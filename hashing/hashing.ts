@@ -6,13 +6,11 @@
 /**
  * Step 2: Import from crypto-js module the SHA256 library.
  */
-
-// Write your code here
+import {SHA256} from 'crypto-js';
 
 /**
  * Variables: Do not change variable values.
  */
-
 const data1 = "Blockchain Rock!";
 const dataObject = {
     id: 1,
@@ -21,13 +19,14 @@ const dataObject = {
 };
 
 /**
- * Step 3: Add code to the `generate hash function
+ * Step 3: Add code to the `generateHash` function.
  * Function that generates the SHA256 Hash
- * @param {*} obj
+ * @param obj A string or object to be hashed
+ * @returns The hash as a string
  */
-
-function generateHash(obj) {
-    // Write your code here
+function generateHash(obj: string | Record<string, unknown>): string {
+    const stringifiedObj = typeof obj === 'string' ? obj : JSON.stringify(obj);
+    return SHA256(stringifiedObj).toString();
 }
 
 console.log(`SHA256 Hash: ${generateHash(data1)}`);
@@ -35,5 +34,5 @@ console.log("************************************");
 console.log(`SHA256 Hash: ${generateHash(dataObject)}`);
 
 /**
- * Run your application using `node hashing.js`
+ * Run your application using `ts-node` or by compiling it to JavaScript and then using `node`.
  */
