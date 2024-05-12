@@ -63,14 +63,23 @@ class Blockchain {
      */
     async _addBlock(block) {
         try {
-            block.height = this.chain.length;
-            block.time = new Date().getTime().toString().slice(0, -3);
             if (this.chain.length > 0) {
                 block.previousBlockHash = this.chain[this.chain.length - 1].hash;
             }
+            await block.validate(); // Ensure the block is valid before adding
+
+            block.height = this.chain.length;
+            block.time = new Date().getTime().toString().slice(0, -3);
             block.hash = SHA256(JSON.stringify(block)).toString();
             this.chain.push(block);
             this.height = this.chain.length - 1;
+
+            // Validate the entire chain every time a block is added
+            const errors = await this.validateChain();
+            if (errors.length > 0) {
+                throw new Error('Blockchain validation failed: ' + errors.join(', '));
+            }
+
             return block;
         } catch (error) {
             throw error;
